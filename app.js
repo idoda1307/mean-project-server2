@@ -20,8 +20,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));               
 app.use(bodyParser.text());                                    
 app.use(bodyParser.json({ type: 'application/json'}));  
-app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
-app.use(methodOverride());
 app.use(cors());
 
 // app.use((req, res, next) => {
