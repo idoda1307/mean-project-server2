@@ -16,6 +16,8 @@ router.get("/:id",checkAuth, eventController.getEvent);
 
 router.put("/:id", checkAuth, eventController.updateEvent);
 
+router.put("/updateGuests/:id", checkAuth, eventController.joinEvent);
+
 router.delete("/:id", checkAuth, eventController.deleteEvent);
 
 module.exports = router;

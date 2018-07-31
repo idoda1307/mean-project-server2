@@ -19,6 +19,8 @@ exports.sendNotification = (req, res) => {
             'body': req.body.description,
             'icon': 'assets/main-page-logo-small-hat.png',
             'vibrate': [100, 50, 100],
+            'width': '200px',
+            'height': '200px',
             'data': {
                 'dateOfArrival': Date.now(),
                 'primaryKey': 1

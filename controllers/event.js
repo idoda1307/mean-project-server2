@@ -1,4 +1,5 @@
 const Event = require("../models/event");
+const ObjectId = require("mongodb").ObjectId;
 
 exports.createEvent = (req,res,next)=>{
     const event = new Event({
@@ -9,9 +10,9 @@ exports.createEvent = (req,res,next)=>{
         lng: req.body.location.lng,
         creator: req.userData.userId,
         startDate: req.body.dateStarted,
-        endDate: req.body.dateEnded
+        endDate: req.body.dateEnded,
+        guests: null
     });
-    console.log("event added: " + event);
     event.save().then(createdEvent=> {
       res.status(201).json({
             message: 'Event added successfully',
@@ -25,7 +26,6 @@ exports.createEvent = (req,res,next)=>{
          res.status(500).json({
              message: "Creating an event failed!"
            });
-           console.log("error:" + error)
      });
 };
 
@@ -67,7 +67,6 @@ exports.getEvents =  (req, res, next) => {
 }
 
 exports.getUserEvents =  (req, res, next) => {
-  console.log(req.userData.userId);
   Event.find({creator: req.userData.userId})
   .then(events => {
         res.status(200).json({
@@ -92,10 +91,8 @@ exports.getUserEvents =  (req, res, next) => {
   }
 
   exports.deleteEvent = (req, res, next) => {
-    console.log("delete");
-    Event.deleteOne({ _id: req.params.id
-       , creator: req.userData.userId
-     })
+    const id=req.params.id;
+    Event.deleteOne({ _id: ObjectId(id)})
       .then(result => {
        // console.log(result);
         // if(result.n > 0){
@@ -108,9 +105,41 @@ exports.getUserEvents =  (req, res, next) => {
 //         });
        });
   };
+exports.joinEvent = (req, res, next) => {
+  console.log(req.body);
+Event.findById(req.params.id).then(event => {
+  if (event) {
+    // if(req.body.guests != null) {
+    //   event.guests =
+    //   console.log(event.guests);} else {
+    //   event.guests = req.body.guests;
+    // }
+    if(event.guests == null){
+      event.guests = req.body.guests;
+      Event.updateOne({ _id: req.params.id},{ guests: req.body.guests}).then(result => {
+        console.log("event updated: ");
+        if(result.nModified > 0) {
+          res.status(200).json({ message: "Update successful!" });
+        } else {
+          res.status(401).json({ message: "not authorized!" });
+        }
+      });
+    } else {
+    let guests = req.body.guests.map(g=>ObjectId(g));
+    Event.updateOne({ _id: req.params.id}, {$push: {guests: req.body.guests }}).then(result => {
+      console.log("event updated: ");
+      if(result.nModified > 0) {
+        res.status(200).json({ message: "Update successful!" });
+      } else {
+        res.status(401).json({ message: "not authorized!" });
+      }
+    });
+  } 
+}});}
 
   exports.updateEvent = (req, res, next) => {
     console.log("update");
+    console.log(req.body);
     const event = new Event({
       _id: req.params.id,
       title: req.body.title,
@@ -119,15 +148,17 @@ exports.getUserEvents =  (req, res, next) => {
       lng: req.body.location.lng,
       creator: req.userData.userId,
       startDate: req.body.dateStarted,
-      endDate: req.body.dateEnded
+      endDate: req.body.dateEnded,
+      guests: req.body.guests
     });
-    Event.updateOne({ _id: req.params.id, creator: req.userData.userId }, event).then(result => {
+    if(req.body.guests != null) {
+      event.guests =req.body.guests.map(g=>ObjectId(g));
+    }
+    Event.update({ _id: req.params.id}, {$set: event}).then(result => {
       console.log("event updated: " + event);
       if(result.nModified > 0) {
-        console.log(result);
         res.status(200).json({ message: "Update successful!" });
       } else {
-        console.log(result);
         res.status(401).json({ message: "not authorized!" });
       }
     });

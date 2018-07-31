@@ -9,7 +9,6 @@ exports.createUser = (req, res, next) => {
             email: req.body.email,
             password: hash
         });
-        console.log(user);
         const token = jwt.sign({email: user.email, userId: user._id }, 'long_string', { expiresIn: "1h" });
         user.save().then(result => {
             res.status(201).json({
