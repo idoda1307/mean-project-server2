@@ -7,8 +7,9 @@ const eventSchema = mongoose.Schema({
     lng: {type: Number, required: true},
     creator: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
     startDate: {type: Date, required: true},
-    endDate: {type: Date, required: true},
-    guests: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}]
+    endDate: {type: Date, required: true, expires: 0 },
+    guests: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    imagePath: { type: String, required: true }
 });
 
 module.exports = mongoose.model("Event", eventSchema);

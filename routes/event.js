@@ -1,10 +1,11 @@
 const express = require("express");
 const eventController = require("../controllers/event");
 const checkAuth = require('../middleware/check-auth');
+const extractFile = require("../middleware/file");
 
 const router = express.Router();
 
-router.post("/createevent" , checkAuth, eventController.createEvent);
+router.post("" , checkAuth,extractFile, eventController.createEvent);
 
 router.get("/userevents", checkAuth, eventController.getUserEvents);
 
@@ -14,7 +15,7 @@ router.get("", eventController.getEvents);
 
 router.get("/:id",checkAuth, eventController.getEvent);
 
-router.put("/:id", checkAuth, eventController.updateEvent);
+router.put("/:id", checkAuth,extractFile, eventController.updateEvent);
 
 router.put("/updateGuests/:id", checkAuth, eventController.joinEvent);
 

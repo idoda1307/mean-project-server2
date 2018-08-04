@@ -15,7 +15,7 @@ webpush.setVapidDetails(
 exports.sendNotification = (req, res) => {
     const notificationPayload = {
         'notification': {
-            'title': "an event with title "+ req.body.title +"was added",
+            'title': "an event with title "+ req.body.title +" was added",
             'body': req.body.description,
             'icon': 'assets/main-page-logo-small-hat.png',
             'vibrate': [100, 50, 100],
