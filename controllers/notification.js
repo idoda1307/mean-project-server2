@@ -40,9 +40,7 @@ exports.sendNotification = (req, res) => {
 exports.addPushSubscriber = (req, res) => {
     const sub = req.body;
     console.log('Received Subscription on the server: ', sub);
-    if(USER_SUBSCRIPTIONS.indexOf(sub) === -1) {
-        USER_SUBSCRIPTIONS.push(sub);
-        console.log(USER_SUBSCRIPTIONS.length);
-      }
+    var isInArray = USER_SUBSCRIPTIONS.find(function(el){ return el.endpoint === sub.endpoint }) !== undefined;
+    if(!isInArray) USER_SUBSCRIPTIONS.push(sub);
     res.status(200).json({message: 'Subscription added successfully.'});
 }
