@@ -171,7 +171,8 @@ Event.findById(req.params.id).then(event => {
   exports.updateEvent = (req, res, next) => {
     let imagePath = req.body.imagePath;
     if (req.file) {
-      const url = req.protocol + "://" + req.get("host");
+      const url = "https://arcane-gorge-90547.herokuapp.com";
+     // const url = req.protocol + "://" + req.get("host");
       imagePath = url + "/images/" + req.file.filename;
     }
     console.log("update");
