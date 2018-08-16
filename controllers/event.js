@@ -2,8 +2,8 @@ const Event = require("../models/event");
 const ObjectId = require("mongodb").ObjectId;
 
 exports.createEvent = (req,res,next)=>{
- // const url = "https://arcane-gorge-90547.herokuapp.com";
-  const url = req.protocol + "://" + req.get("host");
+  const url = "https://arcane-gorge-90547.herokuapp.com";
+ // const url = req.protocol + "://" + req.get("host");
   console.log(req.body);
   console.log(req.userData);
   console.log("url: " + url);
