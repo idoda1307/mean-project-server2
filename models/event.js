@@ -5,10 +5,12 @@ const eventSchema = mongoose.Schema({
     description: {type: String, required: true},
     lat: {type: Number, required: true},
     lng: {type: Number, required: true},
-    creator: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+    creator: {type: String, required: true},
     startDate: {type: Date, required: true},
-    endDate: {type: Date, required: true, expires: 0 },
-    guests: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    // endDate: {type: Date, required: true},
+    //     // , expires: 0
+    //  },
+    guests: [String],
     imagePath: { type: String, required: true }
 });
 

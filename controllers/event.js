@@ -2,8 +2,10 @@ const Event = require("../models/event");
 const ObjectId = require("mongodb").ObjectId;
 
 exports.createEvent = (req,res,next)=>{
-  const url = "https://arcane-gorge-90547.herokuapp.com";
- // const url = req.protocol + "://" + req.get("host");
+ // const url = "https://arcane-gorge-90547.herokuapp.com";
+  const url = req.protocol + "://" + req.get("host");
+  console.log(req.body);
+  console.log(req.userData);
   console.log("url: " + url);
     const event = new Event({
         _id: null,
@@ -11,13 +13,14 @@ exports.createEvent = (req,res,next)=>{
         description: req.body.description,
         lat: req.body.lat,
         lng: req.body.lng,
-        creator: req.userData.userId,
+        creator: req.userData.userName,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         guests: null,
         imagePath: url + "/images/" + req.file.filename,
     });
     event.save().then(createdEvent=> {
+      console.log(createdEvent);
       res.status(201).json({
             message: 'Event added successfully',
             event: {
@@ -27,6 +30,7 @@ exports.createEvent = (req,res,next)=>{
           });
     })
      .catch(error=>{
+       console.log(error);
          res.status(500).json({
              message: "Creating an event failed!"
            });
@@ -139,7 +143,7 @@ Event.findById(req.params.id).then(event => {
    if(event.guests == null){
        event.guests = [];
        const guest = req.body;
-       Event.updateOne({ _id: req.params.id},{ guests: ObjectId(guest)}).then(result => {
+       Event.updateOne({ _id: req.params.id},{ guests: guest}).then(result => {
              if(result.nModified > 0) {
                res.status(200).json({ message: "Update successful!" });
              } else {
@@ -151,7 +155,7 @@ Event.findById(req.params.id).then(event => {
             });
           });
     } else {
-    Event.updateOne({ _id: req.params.id}, {$push: {guests: ObjectId(req.body) }}).then(result => {
+    Event.updateOne({ _id: req.params.id}, {$push: {guests: req.body }}).then(result => {
       if(result.nModified > 0) {
         res.status(200).json({ message: "Update successful!" });
       } else {
@@ -182,13 +186,13 @@ Event.findById(req.params.id).then(event => {
       description: req.body.description,
       lat: req.body.lat,
       lng: req.body.lng,
-      creator: req.userData.userId,
+      creator: req.userData.userName,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       guests: req.body.guests,
       imagePath: imagePath
     });
-    Event.update({ _id: req.params.id, creator: req.userData.userId}, {$set: event}).then(result => {
+    Event.update({ _id: req.params.id, creator: req.userData.userName}, {$set: event}).then(result => {
       console.log("event updated: " + event);
       if(result.nModified > 0) {
         res.status(200).json({ message: "Update successful!" });
