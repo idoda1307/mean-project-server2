@@ -7,11 +7,12 @@ const eventSchema = mongoose.Schema({
     lng: {type: Number, required: true},
     creator: {type: String, required: true},
     startDate: {type: Date, required: true},
-    // endDate: {type: Date, required: true},
+   //  endDate: {type: Date, required: true},
     //     // , expires: 0
-    //  },
+     // },
     guests: [String],
-    imagePath: { type: String, required: true }
+    imagePath: { type: String, required: true },
+    option: { type: String, required: true}
 });
 
 module.exports = mongoose.model("Event", eventSchema);

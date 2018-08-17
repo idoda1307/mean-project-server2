@@ -2,7 +2,7 @@ const Event = require("../models/event");
 const ObjectId = require("mongodb").ObjectId;
 
 exports.createEvent = (req,res,next)=>{
-  const url = "https://arcane-gorge-90547.herokuapp.com";
+  const url =  "https://arcane-gorge-90547.herokuapp.com";
  // const url = req.protocol + "://" + req.get("host");
   console.log(req.body);
   console.log(req.userData);
@@ -18,6 +18,7 @@ exports.createEvent = (req,res,next)=>{
         endDate: req.body.endDate,
         guests: null,
         imagePath: url + "/images/" + req.file.filename,
+        option: req.body.option
     });
     event.save().then(createdEvent=> {
       console.log(createdEvent);
@@ -124,22 +125,6 @@ exports.joinEvent = (req, res, next) => {
   console.log('join to event');
 Event.findById(req.params.id).then(event => {
   if (event) {
-    // if(req.body.guests != null) {
-    //   event.guests =
-    //   console.log(event.guests);} else {
-    //   event.guests = req.body.guests;
-    // }
-    // 
-    //   Event.updateOne({ _id: req.params.id},{ guests: req.body.guests}).then(result => {
-    //     console.log("event updated: ");
-    //     if(result.nModified > 0) {
-    //       res.status(200).json({ message: "Update successful!" });
-    //     } else {
-    //       res.status(401).json({ message: "not authorized!" });
-    //     }
-    //   });
-    // } else {
-   // let guests = req.body.guests.map(g=>ObjectId(g));
    if(event.guests == null){
        event.guests = [];
        const guest = req.body;
@@ -176,7 +161,7 @@ Event.findById(req.params.id).then(event => {
     let imagePath = req.body.imagePath;
     if (req.file) {
       const url = "https://arcane-gorge-90547.herokuapp.com";
-     // const url = req.protocol + "://" + req.get("host");
+    //  const url = req.protocol + "://" + req.get("host");
       imagePath = url + "/images/" + req.file.filename;
     }
     console.log("update");
@@ -190,7 +175,8 @@ Event.findById(req.params.id).then(event => {
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       guests: req.body.guests,
-      imagePath: imagePath
+      imagePath: imagePath,
+      option: req.body.option
     });
     Event.update({ _id: req.params.id, creator: req.userData.userName}, {$set: event}).then(result => {
       console.log("event updated: " + event);
